@@ -9,6 +9,21 @@
   
   body {
     @apply font-sans antialiased;
+    /* Ensure proper display in iframes */
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    overflow-x: auto;
+  }
+  
+  /* Iframe-specific adjustments */
+  html.iframe-embedded,
+  html.iframe-embedded body {
+    @apply bg-white;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    width: 100%;
   }
 }
 
@@ -43,5 +58,19 @@
   
   .status-danger {
     @apply bg-danger-100 text-danger-800;
+  }
+  
+  /* Iframe container adjustments */
+  .iframe-container {
+    width: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+  
+  /* Responsive iframe styles */
+  @media (max-width: 768px) {
+    .card, .metric-card {
+      @apply p-4;
+    }
   }
 } 
