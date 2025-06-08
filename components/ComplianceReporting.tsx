@@ -14,7 +14,7 @@ import {
   Tooltip, 
   Legend 
 } from 'recharts';
-import { CheckCircle, AlertTriangle, XCircle, Calendar, Download, FileText, Loader2, Brain, Zap, Search, Target, AlertCircle, Activity, Shield } from 'lucide-react';
+import { CheckCircle, AlertTriangle, XCircle, Calendar, Download, FileText, Loader2, Brain, Zap, Search, Target, AlertCircle, Activity, Shield, TrendingUp } from 'lucide-react';
 import { complianceMetrics } from '@/lib/testData';
 
 export default function ComplianceReporting() {
@@ -478,7 +478,7 @@ Report ID: AI-AUDIT-${Date.now()}
                   <div className="flex items-center space-x-2">
                     <Brain className="h-4 w-4 text-accent-purple" />
                     <span className="text-sm font-medium text-white">AI Confidence Level</span>
-                    <span className="text-sm font-medium text-accent-purple group-hover:scale-110 transition-transform duration-300">{metric.aiConfidence}%</span>
+                    <span className="text-sm font-medium text-accent-purple group-hover:scale-110 transition-transform duration-300">{Math.min(95, 85 + Math.floor(metric.score / 10))}%</span>
                   </div>
                 </div>
               </div>
