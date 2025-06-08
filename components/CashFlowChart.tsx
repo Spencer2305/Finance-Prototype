@@ -19,10 +19,10 @@ export default function CashFlowChart() {
   const formatCurrency = (value: number) => `£${(value / 1000).toFixed(0)}k`;
 
   return (
-    <div className="card">
+    <div className="glass-card p-6">
       <div className="mb-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">Cash Flow Analysis</h3>
-        <p className="text-sm text-gray-600">
+        <h3 className="text-lg font-semibold text-white mb-2">💰 Cash Flow Analysis</h3>
+        <p className="text-sm text-gray-400">
           Monthly cash inflows, outflows, and running balance
         </p>
       </div>
@@ -30,25 +30,33 @@ export default function CashFlowChart() {
       <div className="h-80">
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart data={cashFlowData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#252528" />
             <XAxis 
               dataKey="month" 
-              tick={{ fontSize: 12 }}
-              axisLine={{ stroke: '#e0e0e0' }}
+              tick={{ fontSize: 12, fill: '#9ca3af' }}
+              axisLine={{ stroke: '#252528' }}
             />
             <YAxis 
               tickFormatter={formatCurrency}
-              tick={{ fontSize: 12 }}
-              axisLine={{ stroke: '#e0e0e0' }}
+              tick={{ fontSize: 12, fill: '#9ca3af' }}
+              axisLine={{ stroke: '#252528' }}
             />
             <Tooltip 
               formatter={(value: number) => [formatCurrency(value), '']}
-              labelStyle={{ color: '#374151' }}
+              contentStyle={{
+                backgroundColor: '#111113',
+                border: '1px solid #252528',
+                borderRadius: '8px',
+                color: '#fff'
+              }}
+              labelStyle={{ color: '#9ca3af' }}
             />
-            <Legend />
+            <Legend 
+              wrapperStyle={{ color: '#9ca3af' }}
+            />
             <Bar 
               dataKey="inflow" 
-              fill="#22c55e" 
+              fill="#10b981" 
               name="Cash Inflow"
               radius={[4, 4, 0, 0]}
             />
@@ -61,7 +69,7 @@ export default function CashFlowChart() {
             <Line 
               type="monotone" 
               dataKey="balance" 
-              stroke="#0ea5e9" 
+              stroke="#06b6d4" 
               strokeWidth={3}
               name="Running Balance"
             />
@@ -71,20 +79,20 @@ export default function CashFlowChart() {
 
       {/* Cash Flow Summary */}
       <div className="mt-6 grid grid-cols-3 gap-4">
-        <div className="text-center p-4 bg-success-50 rounded-lg">
-          <p className="text-sm font-medium text-success-800">Net Cash Flow</p>
-          <p className="text-xl font-bold text-success-900">£49,000</p>
-          <p className="text-xs text-success-600">This month</p>
+        <div className="text-center p-4 bg-dark-200 rounded-lg border border-accent-green/20">
+          <p className="text-sm font-medium text-white">Net Cash Flow</p>
+          <p className="text-xl font-bold text-accent-green">£49,000</p>
+          <p className="text-xs text-gray-400">This month</p>
         </div>
-        <div className="text-center p-4 bg-primary-50 rounded-lg">
-          <p className="text-sm font-medium text-primary-800">Current Balance</p>
-          <p className="text-xl font-bold text-primary-900">£339,000</p>
-          <p className="text-xs text-primary-600">As of today</p>
+        <div className="text-center p-4 bg-dark-200 rounded-lg border border-accent-cyan/20">
+          <p className="text-sm font-medium text-white">Current Balance</p>
+          <p className="text-xl font-bold text-accent-cyan">£339,000</p>
+          <p className="text-xs text-gray-400">As of today</p>
         </div>
-        <div className="text-center p-4 bg-warning-50 rounded-lg">
-          <p className="text-sm font-medium text-warning-800">Burn Rate</p>
-          <p className="text-xl font-bold text-warning-900">£89,000</p>
-          <p className="text-xs text-warning-600">Monthly avg</p>
+        <div className="text-center p-4 bg-dark-200 rounded-lg border border-amber-500/20">
+          <p className="text-sm font-medium text-white">Burn Rate</p>
+          <p className="text-xl font-bold text-amber-400">£89,000</p>
+          <p className="text-xs text-gray-400">Monthly avg</p>
         </div>
       </div>
     </div>

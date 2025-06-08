@@ -15,24 +15,24 @@ export default function PipelineAnalysis() {
   const getStageColor = (stage: string) => {
     switch (stage) {
       case 'Discovery':
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-dark-200 text-gray-300 border-gray-500';
       case 'Initial Meeting':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-accent-cyan/10 text-accent-cyan border-accent-cyan/20';
       case 'Proposal Sent':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-amber-500/10 text-amber-300 border-amber-500/20';
       case 'Negotiation':
-        return 'bg-orange-100 text-orange-800';
+        return 'bg-orange-500/10 text-orange-300 border-orange-500/20';
       case 'Contract Review':
-        return 'bg-green-100 text-green-800';
+        return 'bg-accent-green/10 text-accent-green border-accent-green/20';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-dark-200 text-gray-300 border-gray-500';
     }
   };
 
   const getProbabilityColor = (probability: number) => {
-    if (probability >= 80) return 'text-success-600';
-    if (probability >= 60) return 'text-warning-600';
-    return 'text-danger-600';
+    if (probability >= 80) return 'text-accent-green';
+    if (probability >= 60) return 'text-amber-400';
+    return 'text-red-400';
   };
 
   const getAIConfidence = (probability: number) => {
@@ -43,26 +43,26 @@ export default function PipelineAnalysis() {
   const closeModal = () => setSelectedDeal(null);
 
   return (
-    <div className="card border-l-4 border-l-green-500">
+    <div className="glass-card p-6 border-l-4 border-l-accent-green">
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-3">
-            <div className="p-2 bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg">
-              <Brain className="h-6 w-6 text-white" />
+            <div className="icon-container-green">
+              <Brain className="h-6 w-6 text-accent-green" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-1">AI Pipeline Analysis</h3>
-              <p className="text-sm text-gray-600">
+              <h3 className="text-lg font-semibold text-white mb-1">📊 AI Pipeline Analysis</h3>
+              <p className="text-sm text-gray-400">
                 Machine learning CRM analysis with neural network probability calculations
               </p>
             </div>
           </div>
           <div className="flex items-center space-x-2">
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+            <span className="status-success">
               <Activity className="h-3 w-3 mr-1" />
               AI CRM Active
             </span>
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+            <span className="status-cyber">
               <Brain className="h-3 w-3 mr-1" />
               ML Scoring
             </span>
@@ -70,19 +70,19 @@ export default function PipelineAnalysis() {
         </div>
 
         {/* AI Analysis Summary */}
-        <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200 mb-6">
+        <div className="p-4 bg-dark-200 rounded-lg border border-accent-green/20 mb-6">
           <div className="flex items-start space-x-3">
-            <Zap className="h-5 w-5 text-green-600 mt-1" />
+            <Zap className="h-5 w-5 text-accent-green mt-1" />
             <div>
-              <h4 className="font-medium text-green-900 mb-2">🤖 AI Deal Intelligence</h4>
+              <h4 className="font-medium text-white mb-2">🤖 AI Deal Intelligence</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="text-green-800 font-medium">Neural Network Analysis:</span>
-                  <p className="text-green-700">AI algorithms predict 73% conversion rate based on historical patterns</p>
+                  <span className="text-accent-green font-medium">Neural Network Analysis:</span>
+                  <p className="text-gray-300">AI algorithms predict 73% conversion rate based on historical patterns</p>
                 </div>
                 <div>
-                  <span className="text-green-800 font-medium">Machine Learning Insights:</span>
-                  <p className="text-green-700">Deal velocity optimization suggests 15% faster close rates possible</p>
+                  <span className="text-accent-green font-medium">Machine Learning Insights:</span>
+                  <p className="text-gray-300">Deal velocity optimization suggests 15% faster close rates possible</p>
                 </div>
               </div>
             </div>
@@ -92,41 +92,41 @@ export default function PipelineAnalysis() {
 
       {/* AI-Enhanced Pipeline Summary */}
       <div className="grid grid-cols-3 gap-4 mb-6">
-        <div className="text-center p-4 bg-gradient-to-r from-primary-50 to-blue-50 rounded-lg border border-primary-100">
+        <div className="text-center p-4 bg-dark-200 rounded-lg border border-accent-cyan/20">
           <div className="flex items-center justify-center space-x-1 mb-2">
-            <TrendingUp className="h-5 w-5 text-primary-600" />
-            <Brain className="h-3 w-3 text-purple-600" />
+            <TrendingUp className="h-5 w-5 text-accent-cyan" />
+            <Brain className="h-3 w-3 text-accent-purple" />
           </div>
-          <p className="text-sm font-medium text-primary-800">AI Total Pipeline</p>
-          <p className="text-xl font-bold text-primary-900">{formatCurrency(totalPipelineValue)}</p>
-          <p className="text-xs text-primary-600">Neural network tracked</p>
+          <p className="text-sm font-medium text-white">AI Total Pipeline</p>
+          <p className="text-xl font-bold text-white">{formatCurrency(totalPipelineValue)}</p>
+          <p className="text-xs text-gray-400">Neural network tracked</p>
         </div>
-        <div className="text-center p-4 bg-gradient-to-r from-success-50 to-green-50 rounded-lg border border-success-100">
+        <div className="text-center p-4 bg-dark-200 rounded-lg border border-accent-green/20">
           <div className="flex items-center justify-center space-x-1 mb-2">
-            <Calendar className="h-5 w-5 text-success-600" />
-            <Target className="h-3 w-3 text-purple-600" />
+            <Calendar className="h-5 w-5 text-accent-green" />
+            <Target className="h-3 w-3 text-accent-purple" />
           </div>
-          <p className="text-sm font-medium text-success-800">AI Weighted Value</p>
-          <p className="text-xl font-bold text-success-900">{formatCurrency(weightedValue)}</p>
-          <p className="text-xs text-success-600">ML probability adjusted</p>
+          <p className="text-sm font-medium text-white">AI Weighted Value</p>
+          <p className="text-xl font-bold text-white">{formatCurrency(weightedValue)}</p>
+          <p className="text-xs text-gray-400">ML probability adjusted</p>
         </div>
-        <div className="text-center p-4 bg-gradient-to-r from-warning-50 to-orange-50 rounded-lg border border-warning-100">
+        <div className="text-center p-4 bg-dark-200 rounded-lg border border-amber-500/20">
           <div className="flex items-center justify-center space-x-1 mb-2">
-            <Users className="h-5 w-5 text-warning-600" />
-            <Activity className="h-3 w-3 text-purple-600" />
+            <Users className="h-5 w-5 text-amber-400" />
+            <Activity className="h-3 w-3 text-accent-purple" />
           </div>
-          <p className="text-sm font-medium text-warning-800">AI Active Deals</p>
-          <p className="text-xl font-bold text-warning-900">{pipelineDeals.length}</p>
-          <p className="text-xs text-warning-600">Machine learning monitored</p>
+          <p className="text-sm font-medium text-white">AI Active Deals</p>
+          <p className="text-xl font-bold text-white">{pipelineDeals.length}</p>
+          <p className="text-xs text-gray-400">Machine learning monitored</p>
         </div>
       </div>
 
       {/* Simplified Deal List */}
       <div className="space-y-3">
         <div className="flex items-center space-x-2 mb-4">
-          <Brain className="h-5 w-5 text-purple-600" />
-          <h4 className="text-md font-medium text-gray-800">AI-Analyzed Active Deals</h4>
-          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+          <Brain className="h-5 w-5 text-accent-purple" />
+          <h4 className="text-md font-medium text-white">AI-Analyzed Active Deals</h4>
+          <span className="status-cyber">
             Click for AI Insights
           </span>
         </div>
@@ -134,20 +134,20 @@ export default function PipelineAnalysis() {
         {pipelineDeals.map((deal) => (
           <div 
             key={deal.id} 
-            className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors hover:border-purple-300 cursor-pointer group"
+            className="p-4 border border-dark-300 rounded-lg hover:bg-dark-200 transition-colors hover:border-accent-purple/40 cursor-pointer group glass-card"
             onClick={() => setSelectedDeal(deal)}
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <Brain className="h-4 w-4 text-purple-600" />
+                <Brain className="h-4 w-4 text-accent-purple" />
                 <div>
-                  <h5 className="font-medium text-gray-900">{deal.client}</h5>
-                  <p className="text-sm text-gray-600">{deal.source}</p>
+                  <h5 className="font-medium text-white">{deal.client}</h5>
+                  <p className="text-sm text-gray-400">{deal.source}</p>
                 </div>
-                <span className={`status-badge ${getStageColor(deal.stage)}`}>
+                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border ${getStageColor(deal.stage)}`}>
                   {deal.stage}
                 </span>
-                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                <span className="status-cyber">
                   <Zap className="h-3 w-3 mr-1" />
                   AI: {getAIConfidence(deal.probability)}%
                 </span>
@@ -155,10 +155,10 @@ export default function PipelineAnalysis() {
               
               <div className="flex items-center space-x-3">
                 <div className="text-right">
-                  <p className="font-semibold text-gray-900">{formatCurrency(deal.value)}</p>
-                  <p className="text-sm text-gray-500">Close: {new Date(deal.expectedClose).toLocaleDateString()}</p>
+                  <p className="font-semibold text-white">{formatCurrency(deal.value)}</p>
+                  <p className="text-sm text-gray-400">Close: {new Date(deal.expectedClose).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' })}</p>
                 </div>
-                <ChevronRight className="h-4 w-4 text-gray-400 group-hover:text-purple-600 transition-colors" />
+                <ChevronRight className="h-4 w-4 text-gray-400 group-hover:text-accent-purple transition-colors" />
               </div>
             </div>
           </div>
@@ -167,156 +167,119 @@ export default function PipelineAnalysis() {
 
       {/* AI Pipeline Insights */}
       <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
+        <div className="p-4 bg-dark-200 rounded-lg border border-accent-cyan/20">
           <div className="flex items-center space-x-2 mb-2">
-            <Brain className="h-4 w-4 text-blue-600" />
-            <h5 className="font-medium text-blue-900">AI Conversion Rate</h5>
+            <Brain className="h-4 w-4 text-accent-cyan" />
+            <span className="text-sm font-medium text-white">AI Conversion Rate</span>
           </div>
-          <p className="text-2xl font-bold text-blue-800">73.2%</p>
-          <p className="text-xs text-blue-600">ML predicted success</p>
+          <p className="text-xl font-bold text-white">73.2%</p>
+          <p className="text-xs text-gray-400">ML predicted success</p>
         </div>
         
-        <div className="p-4 bg-gradient-to-r from-purple-50 to-violet-50 rounded-lg border border-purple-200">
+        <div className="p-4 bg-dark-200 rounded-lg border border-accent-purple/20">
           <div className="flex items-center space-x-2 mb-2">
-            <Zap className="h-4 w-4 text-purple-600" />
-            <h5 className="font-medium text-purple-900">Neural Analysis Speed</h5>
+            <Zap className="h-4 w-4 text-accent-purple" />
+            <span className="text-sm font-medium text-white">Neural Analysis Speed</span>
           </div>
-          <p className="text-2xl font-bold text-purple-800">1.8ms</p>
-          <p className="text-xs text-purple-600">Real-time processing</p>
+          <p className="text-xl font-bold text-white">1.8ms</p>
+          <p className="text-xs text-gray-400">Real-time processing</p>
         </div>
         
-        <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200">
+        <div className="p-4 bg-dark-200 rounded-lg border border-accent-green/20">
           <div className="flex items-center space-x-2 mb-2">
-            <Activity className="h-4 w-4 text-green-600" />
-            <h5 className="font-medium text-green-900">ML Data Points</h5>
+            <Activity className="h-4 w-4 text-accent-green" />
+            <span className="text-sm font-medium text-white">ML Data Points</span>
           </div>
-          <p className="text-2xl font-bold text-green-800">2,847</p>
-          <p className="text-xs text-green-600">Historical deals analyzed</p>
+          <p className="text-xl font-bold text-white">2,847</p>
+          <p className="text-xs text-gray-400">Historical deals analyzed</p>
         </div>
       </div>
 
       {/* Deal Details Modal */}
       {selectedDeal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+          <div className="glass-card p-6 max-w-2xl w-full mx-4 border border-accent-purple/30">
+            <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-3">
-                <Brain className="h-6 w-6 text-purple-600" />
+                <div className="icon-container">
+                  <Brain className="h-6 w-6 text-accent-purple" />
+                </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900">{selectedDeal.client}</h3>
-                  <p className="text-sm text-gray-600">AI Deal Analysis</p>
+                  <h3 className="text-lg font-semibold text-white">🤖 AI Deal Analysis: {selectedDeal.client}</h3>
+                  <p className="text-sm text-gray-400">Advanced neural network insights</p>
                 </div>
               </div>
-              <button onClick={closeModal} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                <X className="h-5 w-5 text-gray-500" />
+              <button 
+                onClick={closeModal}
+                className="p-2 hover:bg-dark-300 rounded-lg transition-colors"
+              >
+                <X className="h-5 w-5 text-gray-400" />
               </button>
             </div>
             
-            <div className="p-6 space-y-6">
-              {/* Deal Overview */}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm font-medium text-gray-600">Deal Value</label>
-                  <p className="text-2xl font-bold text-gray-900">{formatCurrency(selectedDeal.value)}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-600">Current Stage</label>
-                  <div className="mt-1">
-                    <span className={`status-badge ${getStageColor(selectedDeal.stage)}`}>
-                      {selectedDeal.stage}
-                    </span>
-                  </div>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-600">Expected Close</label>
-                  <p className="text-lg font-medium text-gray-900">{new Date(selectedDeal.expectedClose).toLocaleDateString()}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-600">Lead Source</label>
-                  <p className="text-lg font-medium text-gray-900">{selectedDeal.source}</p>
-                </div>
-              </div>
-
-              {/* AI Analysis */}
-              <div className="p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-purple-200">
-                <h4 className="font-medium text-purple-900 mb-3">🤖 AI Probability Analysis</h4>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <div className="flex items-center space-x-2 mb-1">
-                      <Target className="h-4 w-4 text-purple-600" />
-                      <span className="text-sm font-medium text-purple-800">Manual Probability:</span>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div className="p-4 bg-dark-200 rounded-lg border border-dark-300">
+                  <h4 className="font-medium text-white mb-2">Deal Information</h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Value:</span>
+                      <span className="text-white font-medium">{formatCurrency(selectedDeal.value)}</span>
                     </div>
-                    <p className={`text-xl font-bold ${getProbabilityColor(selectedDeal.probability)}`}>
-                      {selectedDeal.probability}%
-                    </p>
-                  </div>
-                  <div>
-                    <div className="flex items-center space-x-2 mb-1">
-                      <Brain className="h-4 w-4 text-purple-600" />
-                      <span className="text-sm font-medium text-purple-800">AI Confidence:</span>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Probability:</span>
+                      <span className={getProbabilityColor(selectedDeal.probability)}>{selectedDeal.probability}%</span>
                     </div>
-                    <p className="text-xl font-bold text-purple-600">
-                      {getAIConfidence(selectedDeal.probability)}%
-                    </p>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Stage:</span>
+                      <span className={`inline-flex items-center px-2 py-1 rounded text-xs ${getStageColor(selectedDeal.stage)}`}>
+                        {selectedDeal.stage}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Expected Close:</span>
+                      <span className="text-white">{new Date(selectedDeal.expectedClose).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' })}</span>
+                    </div>
                   </div>
                 </div>
               </div>
-
-              {/* AI Recommendations */}
-              <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200">
-                <h4 className="font-medium text-green-900 mb-3">🧠 Neural Network Recommendations</h4>
-                <div className="space-y-3">
-                  <div className="flex items-start space-x-2">
-                    <Zap className="h-4 w-4 text-green-600 mt-1" />
+              
+              <div className="space-y-4">
+                <div className="p-4 bg-dark-200 rounded-lg border border-accent-purple/20">
+                  <h4 className="font-medium text-white mb-3">🧠 AI Analysis</h4>
+                  <div className="space-y-3 text-sm">
                     <div>
-                      <p className="text-sm font-medium text-green-800">Priority Level:</p>
-                      <p className="text-sm text-green-700">
-                        {selectedDeal.probability >= 80 ? 'High priority - accelerate close process' :
-                         selectedDeal.probability >= 60 ? 'Medium priority - nurture relationship and address concerns' :
-                         'Low priority - reassess qualification and value proposition'}
+                      <span className="text-accent-purple font-medium">AI Confidence:</span>
+                      <p className="text-gray-300">{getAIConfidence(selectedDeal.probability)}% neural network confidence</p>
+                    </div>
+                    <div>
+                      <span className="text-accent-purple font-medium">ML Recommendations:</span>
+                      <p className="text-gray-300">
+                        {selectedDeal.probability > 75 ? 'High conversion probability - prioritize resources' :
+                         selectedDeal.probability > 50 ? 'Moderate risk - increase engagement frequency' :
+                         'Lower probability - consider alternative strategies'}
                       </p>
                     </div>
-                  </div>
-                  <div className="flex items-start space-x-2">
-                    <Brain className="h-4 w-4 text-green-600 mt-1" />
                     <div>
-                      <p className="text-sm font-medium text-green-800">AI Predicted Timeline:</p>
-                      <p className="text-sm text-green-700">
-                        Based on similar deals, expect {Math.ceil((new Date(selectedDeal.expectedClose).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24) * 0.9)} days to close
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-2">
-                    <Activity className="h-4 w-4 text-green-600 mt-1" />
-                    <div>
-                      <p className="text-sm font-medium text-green-800">Next Best Action:</p>
-                      <p className="text-sm text-green-700">
-                        {selectedDeal.stage === 'Discovery' ? 'Schedule technical demo and needs assessment' :
-                         selectedDeal.stage === 'Initial Meeting' ? 'Send detailed proposal with pricing options' :
-                         selectedDeal.stage === 'Proposal Sent' ? 'Follow up with decision makers and address objections' :
-                         selectedDeal.stage === 'Negotiation' ? 'Finalize terms and prepare contract documentation' :
-                         'Complete legal review and schedule signing ceremony'}
+                      <span className="text-accent-purple font-medium">Risk Assessment:</span>
+                      <p className="text-gray-300">
+                        {selectedDeal.probability > 75 ? 'Low risk profile based on historical patterns' :
+                         selectedDeal.probability > 50 ? 'Medium risk - monitor closely for changes' :
+                         'Higher risk - requires strategic intervention'}
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
-
-              {/* Expected Values */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="p-3 bg-gray-50 rounded-lg">
-                  <p className="text-sm font-medium text-gray-600">AI Expected Value</p>
-                  <p className="text-lg font-bold text-purple-600">
-                    {formatCurrency(selectedDeal.value * getAIConfidence(selectedDeal.probability) / 100)}
-                  </p>
-                </div>
-                <div className="p-3 bg-gray-50 rounded-lg">
-                  <p className="text-sm font-medium text-gray-600">Manual Expected Value</p>
-                  <p className="text-lg font-bold text-gray-600">
-                    {formatCurrency(selectedDeal.value * selectedDeal.probability / 100)}
-                  </p>
-                </div>
-              </div>
+            </div>
+            
+            <div className="mt-6 flex justify-end">
+              <button 
+                onClick={closeModal}
+                className="btn-cyber"
+              >
+                Close Analysis
+              </button>
             </div>
           </div>
         </div>

@@ -17,26 +17,26 @@ export default function ForecastingCharts() {
   const formatCurrency = (value: number) => `£${(value / 1000).toFixed(0)}k`;
 
   return (
-    <div className="card border-l-4 border-l-purple-500">
+    <div className="glass-card p-6 border-l-4 border-l-accent-purple">
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-3">
-            <div className="p-2 bg-gradient-to-r from-primary-600 to-purple-600 rounded-lg">
-              <Brain className="h-6 w-6 text-white" />
+            <div className="icon-container">
+              <Brain className="h-6 w-6 text-accent-purple" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-1">AI Revenue & Expense Forecasting</h3>
-              <p className="text-sm text-gray-600">
+              <h3 className="text-lg font-semibold text-white mb-1">📈 AI Revenue & Expense Forecasting</h3>
+              <p className="text-sm text-gray-400">
                 Neural network predictions with macro trends, pipeline probabilities, and ML-powered cost analysis
               </p>
             </div>
           </div>
           <div className="flex items-center space-x-2">
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+            <span className="status-success">
               <Activity className="h-3 w-3 mr-1" />
               AI Models Active
             </span>
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+            <span className="status-cyber">
               <Target className="h-3 w-3 mr-1" />
               97% Accuracy
             </span>
@@ -44,19 +44,19 @@ export default function ForecastingCharts() {
         </div>
 
         {/* AI Analysis Summary */}
-        <div className="p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-purple-200 mb-6">
+        <div className="p-4 bg-dark-200 rounded-lg border border-accent-purple/20 mb-6">
           <div className="flex items-start space-x-3">
-            <Zap className="h-5 w-5 text-purple-600 mt-1" />
+            <Zap className="h-5 w-5 text-accent-purple mt-1" />
             <div>
-              <h4 className="font-medium text-purple-900 mb-2">🧠 AI Forecasting Insights</h4>
+              <h4 className="font-medium text-white mb-2">🧠 AI Forecasting Insights</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="text-purple-800 font-medium">Neural Network Analysis:</span>
-                  <p className="text-purple-700">ML models predict 18% revenue growth trajectory based on 1,247 data points</p>
+                  <span className="text-accent-purple font-medium">Neural Network Analysis:</span>
+                  <p className="text-gray-300">ML models predict 18% revenue growth trajectory based on 1,247 data points</p>
                 </div>
                 <div>
-                  <span className="text-purple-800 font-medium">AI Risk Assessment:</span>
-                  <p className="text-purple-700">Algorithmic variance analysis shows 94% confidence in forecast accuracy</p>
+                  <span className="text-accent-purple font-medium">AI Risk Assessment:</span>
+                  <p className="text-gray-300">Algorithmic variance analysis shows 94% confidence in forecast accuracy</p>
                 </div>
               </div>
             </div>
@@ -68,9 +68,9 @@ export default function ForecastingCharts() {
         {/* AI Revenue Chart */}
         <div>
           <div className="flex items-center space-x-2 mb-4">
-            <TrendingUp className="h-5 w-5 text-primary-600" />
-            <h4 className="text-md font-medium text-gray-800">AI-Powered Revenue Forecast</h4>
-            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+            <TrendingUp className="h-5 w-5 text-accent-cyan" />
+            <h4 className="text-md font-medium text-white">AI-Powered Revenue Forecast</h4>
+            <span className="status-cyber">
               <Brain className="h-3 w-3 mr-1" />
               Machine Learning
             </span>
@@ -78,26 +78,31 @@ export default function ForecastingCharts() {
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={revenueData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#252528" />
                 <XAxis 
                   dataKey="month" 
-                  tick={{ fontSize: 12 }}
-                  axisLine={{ stroke: '#e0e0e0' }}
+                  tick={{ fontSize: 12, fill: '#9ca3af' }}
+                  axisLine={{ stroke: '#252528' }}
                 />
                 <YAxis 
                   tickFormatter={formatCurrency}
-                  tick={{ fontSize: 12 }}
-                  axisLine={{ stroke: '#e0e0e0' }}
+                  tick={{ fontSize: 12, fill: '#9ca3af' }}
+                  axisLine={{ stroke: '#252528' }}
                 />
                 <Tooltip 
                   formatter={(value: number) => [formatCurrency(value), '']}
-                  labelStyle={{ color: '#374151' }}
+                  labelStyle={{ color: '#fff' }}
+                  contentStyle={{ 
+                    backgroundColor: '#111113', 
+                    border: '1px solid #252528',
+                    borderRadius: '8px'
+                  }}
                 />
                 <Legend />
                 <Line 
                   type="monotone" 
                   dataKey="actual" 
-                  stroke="#0ea5e9" 
+                  stroke="#06b6d4" 
                   strokeWidth={3}
                   name="Actual Revenue"
                   connectNulls={false}
@@ -113,7 +118,7 @@ export default function ForecastingCharts() {
                 <Line 
                   type="monotone" 
                   dataKey="recurring" 
-                  stroke="#22c55e" 
+                  stroke="#10b981" 
                   strokeWidth={2}
                   name="AI-Tracked Recurring"
                 />
@@ -132,9 +137,9 @@ export default function ForecastingCharts() {
         {/* AI Expense Chart */}
         <div>
           <div className="flex items-center space-x-2 mb-4">
-            <Target className="h-5 w-5 text-orange-600" />
-            <h4 className="text-md font-medium text-gray-800">AI-Optimized Expense Forecast</h4>
-            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+            <Target className="h-5 w-5 text-amber-400" />
+            <h4 className="text-md font-medium text-white">AI-Optimized Expense Forecast</h4>
+            <span className="status-warning">
               <Brain className="h-3 w-3 mr-1" />
               Cost Intelligence
             </span>
@@ -142,20 +147,25 @@ export default function ForecastingCharts() {
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={expenseData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#252528" />
                 <XAxis 
                   dataKey="month" 
-                  tick={{ fontSize: 12 }}
-                  axisLine={{ stroke: '#e0e0e0' }}
+                  tick={{ fontSize: 12, fill: '#9ca3af' }}
+                  axisLine={{ stroke: '#252528' }}
                 />
                 <YAxis 
                   tickFormatter={formatCurrency}
-                  tick={{ fontSize: 12 }}
-                  axisLine={{ stroke: '#e0e0e0' }}
+                  tick={{ fontSize: 12, fill: '#9ca3af' }}
+                  axisLine={{ stroke: '#252528' }}
                 />
                 <Tooltip 
                   formatter={(value: number) => [formatCurrency(value), '']}
-                  labelStyle={{ color: '#374151' }}
+                  labelStyle={{ color: '#fff' }}
+                  contentStyle={{ 
+                    backgroundColor: '#111113', 
+                    border: '1px solid #252528',
+                    borderRadius: '8px'
+                  }}
                 />
                 <Legend />
                 <Line 
@@ -195,31 +205,29 @@ export default function ForecastingCharts() {
 
         {/* AI Forecasting Summary */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
+          <div className="p-4 bg-dark-200 rounded-lg border border-accent-cyan/20">
             <div className="flex items-center space-x-2 mb-2">
-              <Brain className="h-4 w-4 text-blue-600" />
-              <h5 className="font-medium text-blue-900">Neural Network Accuracy</h5>
+              <Brain className="h-4 w-4 text-accent-cyan" />
+              <span className="text-sm font-medium text-white">ML Processing</span>
             </div>
-            <p className="text-2xl font-bold text-blue-800">97.3%</p>
-            <p className="text-xs text-blue-600">Prediction confidence</p>
+            <p className="text-xs text-gray-300">97.3% accuracy</p>
+            <p className="text-xs text-gray-400">2.1ms processing</p>
           </div>
-          
-          <div className="p-4 bg-gradient-to-r from-purple-50 to-violet-50 rounded-lg border border-purple-200">
+          <div className="p-4 bg-dark-200 rounded-lg border border-accent-green/20">
             <div className="flex items-center space-x-2 mb-2">
-              <Zap className="h-4 w-4 text-purple-600" />
-              <h5 className="font-medium text-purple-900">AI Processing Speed</h5>
+              <TrendingUp className="h-4 w-4 text-accent-green" />
+              <span className="text-sm font-medium text-white">Revenue Growth</span>
             </div>
-            <p className="text-2xl font-bold text-purple-800">2.1ms</p>
-            <p className="text-xs text-purple-600">Real-time analysis</p>
+            <p className="text-xs text-gray-300">+18.2% predicted</p>
+            <p className="text-xs text-gray-400">Q2 forecast confidence</p>
           </div>
-          
-          <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200">
+          <div className="p-4 bg-dark-200 rounded-lg border border-accent-purple/20">
             <div className="flex items-center space-x-2 mb-2">
-              <Target className="h-4 w-4 text-green-600" />
-              <h5 className="font-medium text-green-900">ML Data Points</h5>
+              <Activity className="h-4 w-4 text-accent-purple" />
+              <span className="text-sm font-medium text-white">Risk Analysis</span>
             </div>
-            <p className="text-2xl font-bold text-green-800">1,247</p>
-            <p className="text-xs text-green-600">Training dataset size</p>
+            <p className="text-xs text-gray-300">Low variance</p>
+            <p className="text-xs text-gray-400">94% confidence</p>
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   PieChart, 
   Pie, 
@@ -14,13 +14,19 @@ import {
   Tooltip, 
   Legend 
 } from 'recharts';
-import { CheckCircle, AlertTriangle, XCircle, Calendar, Download, FileText, Loader2, Brain, Zap, Search, Target } from 'lucide-react';
+import { CheckCircle, AlertTriangle, XCircle, Calendar, Download, FileText, Loader2, Brain, Zap, Search, Target, AlertCircle, Activity, Shield } from 'lucide-react';
 import { complianceMetrics } from '@/lib/testData';
 
 export default function ComplianceReporting() {
   const [isGeneratingAudit, setIsGeneratingAudit] = useState(false);
   const [auditGenerated, setAuditGenerated] = useState(false);
   const [currentAIStep, setCurrentAIStep] = useState('');
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    // Trigger entrance animation
+    setIsVisible(true);
+  }, []);
 
   const aiSteps = [
     { icon: Search, text: 'AI scanning compliance data repositories...', duration: 800 },
@@ -32,228 +38,160 @@ export default function ComplianceReporting() {
 
   const generateAuditReport = async () => {
     setIsGeneratingAudit(true);
+    setAuditGenerated(false);
     
-    // Show AI processing steps
-    for (const step of aiSteps) {
-      setCurrentAIStep(step.text);
-      await new Promise(resolve => setTimeout(resolve, step.duration));
+    const steps = [
+      'Initializing AI neural networks...',
+      'Scanning financial data repositories...',
+      'Running machine learning compliance algorithms...',
+      'Cross-referencing regulatory databases...',
+      'Applying pattern recognition analysis...',
+      'Generating AI-powered recommendations...',
+      'Compiling comprehensive audit report...',
+      'Neural network analysis complete!'
+    ];
+    
+    for (let i = 0; i < steps.length; i++) {
+      setCurrentAIStep(steps[i]);
+      await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000));
     }
-    
-    // Create audit report data
-    const auditData = {
-      reportId: `AI-AUDIT-${Date.now()}`,
-      generatedAt: new Date().toISOString(),
-      period: {
-        startDate: '2024-01-01',
-        endDate: '2024-03-31',
-      },
-      overallScore: Math.round(
-        complianceMetrics.reduce((sum, metric) => sum + metric.score, 0) / complianceMetrics.length
-      ),
-      categories: complianceMetrics.map(metric => ({
-        ...metric,
-        findings: generateAIFindings(metric),
-        recommendations: generateAIRecommendations(metric),
-      })),
-      summary: {
-        totalRequirements: complianceMetrics.reduce((sum, m) => sum + m.requirements, 0),
-        completedRequirements: complianceMetrics.reduce((sum, m) => sum + m.completed, 0),
-        criticalIssues: complianceMetrics.filter(m => m.status === 'non-compliant').length,
-        warningIssues: complianceMetrics.filter(m => m.status === 'warning').length,
-      }
-    };
-
-    // Create and download the audit report
-    downloadAuditReport(auditData);
     
     setIsGeneratingAudit(false);
     setAuditGenerated(true);
-    setCurrentAIStep('');
     
-    // Reset the generated state after 5 seconds
-    setTimeout(() => setAuditGenerated(false), 5000);
+    // Auto-download after generation
+    setTimeout(() => {
+      downloadAuditReport({
+        timestamp: new Date().toISOString(),
+        overallScore,
+        metrics: complianceMetrics,
+        aiRecommendations: complianceMetrics.map(generateAIRecommendations).flat()
+      });
+    }, 500);
   };
 
   const generateAIFindings = (metric: any) => {
-    const findings = [];
+    const findings = [
+      `AI detected ${metric.requirements} compliance requirements`,
+      `Neural network analysis shows ${metric.score}% completion rate`,
+      `Machine learning algorithms identified ${metric.requirements - Math.floor(metric.requirements * metric.score / 100)} pending items`,
+      `Pattern recognition suggests ${metric.score >= 90 ? 'excellent' : metric.score >= 80 ? 'good' : metric.score >= 70 ? 'adequate' : 'poor'} compliance status`
+    ];
     
-    if (metric.status === 'non-compliant') {
-      findings.push({
-        severity: 'Critical',
-        description: `AI Analysis: ${metric.category} compliance score of ${metric.score}% detected as below regulatory threshold`,
-        impact: 'Machine learning models predict high regulatory risk and potential penalties',
-        aiConfidence: '97%',
-      });
+    switch (metric.status) {
+      case 'compliant':
+        findings.push('AI assessment: Fully compliant with regulations');
+        findings.push('Neural network confidence: High');
+        break;
+      case 'warning':
+        findings.push('AI assessment: Minor compliance gaps detected');
+        findings.push('Machine learning recommendation: Monitor closely');
+        break;
+      case 'non-compliant':
+        findings.push('AI assessment: Critical compliance issues identified');
+        findings.push('Immediate AI-guided remediation required');
+        break;
     }
     
-    if (metric.status === 'warning') {
-      findings.push({
-        severity: 'Warning',
-        description: `AI Detection: ${metric.category} shows ${metric.requirements - metric.completed} outstanding requirements requiring attention`,
-        impact: 'Neural network analysis indicates moderate compliance violation risk',
-        aiConfidence: '89%',
-      });
-    }
-    
-    if (metric.completed < metric.requirements) {
-      findings.push({
-        severity: 'Minor',
-        description: `AI Assessment: ${metric.requirements - metric.completed} administrative gaps identified through pattern recognition`,
-        impact: 'Intelligent algorithms flag potential process inefficiencies',
-        aiConfidence: '84%',
-      });
-    }
-
     return findings;
   };
 
   const generateAIRecommendations = (metric: any) => {
     const recommendations = [];
     
-    if (metric.status === 'non-compliant') {
-      recommendations.push({
-        priority: 'High',
-        action: `AI Recommendation: Immediate remediation of ${metric.category} processes based on regulatory best practices`,
-        timeline: '30 days',
-        owner: 'Compliance Team',
-        aiReasoning: 'Machine learning analysis of similar cases suggests urgent intervention required',
-      });
+    if (metric.score < 100) {
+      recommendations.push(`AI recommends implementing automated ${metric.category.toLowerCase()} monitoring systems`);
+      recommendations.push(`Neural network suggests increasing compliance check frequency to weekly`);
     }
     
-    if (metric.status === 'warning') {
-      recommendations.push({
-        priority: 'Medium',
-        action: `AI Suggestion: Systematic completion of outstanding ${metric.category} requirements`,
-        timeline: '60 days',
-        owner: 'Department Manager',
-        aiReasoning: 'Predictive models indicate optimal timeline for risk mitigation',
-      });
+    if (metric.score < 80) {
+      recommendations.push(`Machine learning analysis indicates need for additional staff training in ${metric.category.toLowerCase()}`);
+      recommendations.push(`AI-powered workflow automation could improve compliance by 25-40%`);
     }
     
-    recommendations.push({
-      priority: 'Low',
-      action: `AI Optimization: Automated monitoring system for ${metric.category} compliance`,
-      timeline: '90 days',
-      owner: 'Audit Team',
-      aiReasoning: 'Neural networks recommend continuous monitoring for pattern detection',
-    });
-
+    if (metric.score < 60) {
+      recommendations.push(`Critical AI alert: Immediate executive attention required for ${metric.category.toLowerCase()}`);
+      recommendations.push(`Neural network recommends engaging external compliance consultants`);
+    }
+    
+    // Always add general AI recommendations
+    recommendations.push(`AI suggestion: Implement predictive analytics for ${metric.category.toLowerCase()} compliance`);
+    recommendations.push(`Machine learning opportunity: Automate documentation and reporting processes`);
+    
     return recommendations;
   };
 
   const downloadAuditReport = (auditData: any) => {
     const reportContent = `
-AI-POWERED COMPLIANCE AUDIT REPORT
-==================================
-🤖 Generated by Artificial Intelligence Systems
+ARTIFICIAL INTELLIGENCE COMPLIANCE AUDIT REPORT
+Generated: ${new Date(auditData.timestamp).toLocaleString()}
+AI Powered by Advanced Neural Networks
 
-Report ID: ${auditData.reportId}
-Generated: ${new Date(auditData.generatedAt).toLocaleString()}
-Period: ${auditData.period.startDate} to ${auditData.period.endDate}
-AI Analysis Engine: FinancePro Neural Compliance Network v2.1
-
-EXECUTIVE SUMMARY (AI GENERATED)
-===============================
-Overall Compliance Score: ${auditData.overallScore}% (AI Confidence: 94%)
-Total Requirements: ${auditData.summary.totalRequirements}
-Completed Requirements: ${auditData.summary.completedRequirements}
-Critical Issues: ${auditData.summary.criticalIssues} (AI Risk Assessment: High)
-Warning Issues: ${auditData.summary.warningIssues} (AI Risk Assessment: Medium)
-
-AI METHODOLOGY
-==============
-This report was generated using advanced artificial intelligence algorithms including:
-• Machine Learning Pattern Recognition
-• Neural Network Risk Assessment
-• Predictive Compliance Modeling
-• Automated Regulatory Analysis
-• Intelligent Anomaly Detection
+EXECUTIVE SUMMARY
+Overall AI Compliance Score: ${auditData.overallScore}%
+Analysis powered by machine learning algorithms
 
 DETAILED AI FINDINGS
-===================
-${auditData.categories.map((category: any) => `
-${category.category.toUpperCase()} - AI ANALYSIS
-${'='.repeat(category.category.length + 15)}
-Status: ${category.status} (AI Verified)
-Score: ${category.score}% (Machine Learning Assessment)
-Requirements: ${category.completed}/${category.requirements} completed
-Next Review: ${category.nextReview}
-
-🤖 AI-Generated Findings:
-${category.findings.map((finding: any) => `  • [${finding.severity}] ${finding.description}
-    💡 AI Impact Analysis: ${finding.impact}
-    🎯 AI Confidence Level: ${finding.aiConfidence || 'N/A'}`).join('\n')}
-
-🧠 AI-Powered Recommendations:
-${category.recommendations.map((rec: any) => `  • [${rec.priority}] ${rec.action}
-    ⏱️ Timeline: ${rec.timeline} | 👤 Owner: ${rec.owner}
-    🔍 AI Reasoning: ${rec.aiReasoning || 'Automated recommendation based on compliance patterns'}`).join('\n')}
+${auditData.metrics.map((metric: any, index: number) => `
+${index + 1}. ${metric.category}
+   AI Score: ${metric.score}%
+   Status: ${metric.status.toUpperCase()}
+   Requirements Analyzed: ${metric.requirements}
+   
+   AI Generated Findings:
+   ${generateAIFindings(metric).map((finding: string) => `   • ${finding}`).join('\n')}
+   
+   AI Recommendations:
+   ${generateAIRecommendations(metric).map((rec: string) => `   • ${rec}`).join('\n')}
 `).join('\n')}
 
-AI COMPLIANCE STATUS MATRIX
-===========================
-${auditData.categories.map((cat: any) => `${cat.category.padEnd(25)} | ${cat.status.padEnd(15)} | ${cat.score}% (AI Verified)`).join('\n')}
+AI EXECUTIVE RECOMMENDATIONS
+• Implement continuous AI monitoring systems across all compliance areas
+• Deploy machine learning algorithms for predictive compliance analytics
+• Establish neural network-powered early warning systems
+• Automate compliance reporting using artificial intelligence
+• Train staff on AI-enhanced compliance management tools
 
-AI-GENERATED RECOMMENDATIONS SUMMARY
-====================================
-High Priority Actions: ${auditData.categories.reduce((sum: number, cat: any) => sum + cat.recommendations.filter((r: any) => r.priority === 'High').length, 0)} (AI Flagged as Urgent)
-Medium Priority Actions: ${auditData.categories.reduce((sum: number, cat: any) => sum + cat.recommendations.filter((r: any) => r.priority === 'Medium').length, 0)} (AI Recommended)
-Low Priority Actions: ${auditData.categories.reduce((sum: number, cat: any) => sum + cat.recommendations.filter((r: any) => r.priority === 'Low').length, 0)} (AI Optimizations)
-
-AI-POWERED NEXT STEPS
-=====================
-1. 🎯 Address AI-identified critical compliance issues within 30 days
-2. 🔧 Implement AI-recommended process improvements
-3. 📅 Schedule AI-assisted follow-up audit for ${new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toLocaleDateString()}
-4. 🤖 Deploy continuous AI monitoring for real-time compliance tracking
-
-ABOUT THIS AI ANALYSIS
-======================
-This comprehensive audit was generated entirely by artificial intelligence using:
-- Advanced machine learning algorithms trained on regulatory data
-- Neural networks specialized in compliance risk assessment
-- Predictive models for forecasting compliance trends
-- Automated pattern recognition for anomaly detection
-
-The AI system analyzed ${auditData.summary.totalRequirements} compliance requirements across 
-${auditData.categories.length} categories in milliseconds, providing insights that would 
-traditionally require hours of manual analysis.
-
-🤖 Report generated by FinancePro AI Compliance Engine
-🧠 Powered by Neural Network Technology
-© ${new Date().getFullYear()} AI-Driven Professional Financial Management System
+---
+This report was generated using advanced artificial intelligence and machine learning technologies.
+Neural network confidence level: 97.3%
+Report ID: AI-AUDIT-${Date.now()}
     `;
-
+    
     const blob = new Blob([reportContent], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `AI_Compliance_Audit_Report_${auditData.reportId}.txt`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `AI-Compliance-Audit-${new Date().toISOString().split('T')[0]}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
     URL.revokeObjectURL(url);
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'compliant':
-        return <CheckCircle className="h-5 w-5 text-success-600" />;
+        return <CheckCircle className="h-4 w-4 text-accent-green" />;
       case 'warning':
-        return <AlertTriangle className="h-5 w-5 text-warning-600" />;
+        return <AlertTriangle className="h-4 w-4 text-amber-400" />;
+      case 'non-compliant':
+        return <XCircle className="h-4 w-4 text-red-400" />;
       default:
-        return <XCircle className="h-5 w-5 text-danger-600" />;
+        return <AlertCircle className="h-4 w-4 text-gray-400" />;
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'compliant':
-        return 'status-success';
+        return 'bg-accent-green/10 text-accent-green border-accent-green/20';
       case 'warning':
-        return 'status-warning';
+        return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+      case 'non-compliant':
+        return 'bg-red-500/10 text-red-400 border-red-500/20';
       default:
-        return 'status-danger';
+        return 'bg-gray-500/10 text-gray-400 border-gray-500/20';
     }
   };
 
@@ -275,35 +213,44 @@ traditionally require hours of manual analysis.
     complianceMetrics.reduce((sum, metric) => sum + metric.score, 0) / complianceMetrics.length
   );
 
-  const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString();
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+  };
 
   const getCurrentStepIcon = () => {
-    const step = aiSteps.find(step => step.text === currentAIStep);
-    if (step) {
-      const IconComponent = step.icon;
-      return <IconComponent className="h-5 w-5 text-primary-600 animate-pulse" />;
-    }
-    return <Brain className="h-5 w-5 text-primary-600 animate-pulse" />;
+    if (currentAIStep.includes('Initializing')) return <Brain className="h-6 w-6 text-accent-purple animate-pulse" />;
+    if (currentAIStep.includes('Scanning')) return <Activity className="h-6 w-6 text-accent-cyan animate-bounce" />;
+    if (currentAIStep.includes('Running')) return <Zap className="h-6 w-6 text-accent-green animate-ping" />;
+    if (currentAIStep.includes('Cross-referencing')) return <Target className="h-6 w-6 text-amber-400 animate-spin" />;
+    if (currentAIStep.includes('pattern')) return <TrendingUp className="h-6 w-6 text-accent-purple animate-pulse" />;
+    if (currentAIStep.includes('Generating')) return <FileText className="h-6 w-6 text-accent-cyan animate-bounce" />;
+    if (currentAIStep.includes('Compiling')) return <Shield className="h-6 w-6 text-accent-green animate-ping" />;
+    return <CheckCircle className="h-6 w-6 text-accent-green animate-pulse" />;
   };
 
   return (
-    <div className="space-y-6">
+    <div className={`space-y-6 transition-all duration-1000 transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
       {/* Header */}
-      <div className="card">
+      <div className="glass-card p-6 hover:scale-[1.01] transition-all duration-300 group">
         <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900">AI-Powered Compliance Reporting</h2>
-            <p className="text-gray-600">Artificial Intelligence regulatory compliance tracking and automated audit generation</p>
+          <div className="transform transition-all duration-300 group-hover:translate-x-2">
+            <h2 className="text-2xl font-bold text-white">🛡️ AI-Powered Compliance Reporting</h2>
+            <p className="text-gray-400">Artificial Intelligence regulatory compliance tracking and automated audit generation</p>
           </div>
           <div className="flex space-x-3">
-            <button className="button-secondary">
+            <button className="btn-secondary hover:scale-105 transition-all duration-200">
               <Download className="h-4 w-4 mr-2" />
               Export Report
             </button>
             <button 
               onClick={generateAuditReport}
               disabled={isGeneratingAudit}
-              className={`button-primary ${isGeneratingAudit ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`btn-cyber hover:scale-105 transition-all duration-200 ${isGeneratingAudit ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               {isGeneratingAudit ? (
                 <>
@@ -327,33 +274,33 @@ traditionally require hours of manual analysis.
 
         {/* AI Processing Status */}
         {isGeneratingAudit && (
-          <div className="mb-6 p-6 bg-gradient-to-r from-primary-50 to-purple-50 border border-primary-200 rounded-lg">
+          <div className="mb-6 p-6 bg-dark-200 border border-accent-purple/30 rounded-lg backdrop-blur-xl animate-pulse">
             <div className="flex items-center space-x-4">
               {getCurrentStepIcon()}
               <div className="flex-1">
                 <div className="flex items-center space-x-2 mb-2">
-                  <h4 className="font-bold text-primary-900">🤖 AI Compliance Engine Active</h4>
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
+                  <h4 className="font-bold text-white">🤖 AI Compliance Engine Active</h4>
+                  <span className="status-cyber animate-bounce">
                     Neural Network Processing
                   </span>
                 </div>
-                <p className="text-sm text-primary-700 font-medium mb-2">
+                <p className="text-sm text-gray-300 font-medium mb-2">
                   {currentAIStep}
                 </p>
-                <div className="flex items-center space-x-2 text-xs text-primary-600">
-                  <Brain className="h-3 w-3" />
+                <div className="flex items-center space-x-2 text-xs text-gray-400">
+                  <Brain className="h-3 w-3 animate-pulse" />
                   <span>Machine Learning Algorithms</span>
                   <span>•</span>
-                  <Zap className="h-3 w-3" />
+                  <Zap className="h-3 w-3 animate-ping" />
                   <span>Real-time Analysis</span>
                   <span>•</span>
-                  <Target className="h-3 w-3" />
+                  <Target className="h-3 w-3 animate-spin" />
                   <span>Pattern Recognition</span>
                 </div>
               </div>
               <div className="text-right">
-                <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
-                  <Loader2 className="h-6 w-6 text-primary-600 animate-spin" />
+                <div className="w-12 h-12 bg-accent-purple/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                  <Loader2 className="h-6 w-6 text-accent-purple animate-spin" />
                 </div>
               </div>
             </div>
@@ -361,29 +308,29 @@ traditionally require hours of manual analysis.
         )}
 
         {auditGenerated && (
-          <div className="mb-6 p-6 bg-gradient-to-r from-success-50 to-green-50 border border-success-200 rounded-lg">
+          <div className="mb-6 p-6 bg-dark-200 border border-accent-green/30 rounded-lg backdrop-blur-xl animate-fade-in">
             <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-success-100 rounded-full flex items-center justify-center">
-                <Brain className="h-6 w-6 text-success-600" />
+              <div className="w-12 h-12 bg-accent-green/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                <Brain className="h-6 w-6 text-accent-green animate-pulse" />
               </div>
               <div className="flex-1">
                 <div className="flex items-center space-x-2 mb-2">
-                  <h4 className="font-bold text-success-900">🧠 AI Audit Report Generated Successfully</h4>
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-success-100 text-success-800">
+                  <h4 className="font-bold text-white">🧠 AI Audit Report Generated Successfully</h4>
+                  <span className="status-success animate-bounce">
                     AI Powered
                   </span>
                 </div>
-                <p className="text-sm text-success-700 mb-2">
+                <p className="text-sm text-gray-300 mb-2">
                   Artificial intelligence has analyzed your compliance data and generated a comprehensive audit report with machine learning insights.
                 </p>
-                <div className="flex items-center space-x-2 text-xs text-success-600">
-                  <CheckCircle className="h-3 w-3" />
+                <div className="flex items-center space-x-2 text-xs text-gray-400">
+                  <CheckCircle className="h-3 w-3 text-accent-green" />
                   <span>Neural Network Analysis Complete</span>
                   <span>•</span>
-                  <CheckCircle className="h-3 w-3" />
+                  <CheckCircle className="h-3 w-3 text-accent-green" />
                   <span>AI Recommendations Generated</span>
                   <span>•</span>
-                  <CheckCircle className="h-3 w-3" />
+                  <CheckCircle className="h-3 w-3 text-accent-green" />
                   <span>Report Downloaded</span>
                 </div>
               </div>
@@ -392,19 +339,19 @@ traditionally require hours of manual analysis.
         )}
 
         {/* Overall Score with AI Branding */}
-        <div className="text-center p-6 bg-gradient-to-r from-primary-50 to-purple-50 rounded-lg mb-6 border border-primary-100">
+        <div className="text-center p-6 bg-dark-200 rounded-lg mb-6 border border-accent-purple/20 hover:border-accent-purple/40 transition-all duration-300 hover:scale-105">
           <div className="flex items-center justify-center space-x-2 mb-2">
-            <Brain className="h-5 w-5 text-primary-600" />
-            <h3 className="text-lg font-semibold text-primary-900">AI-Calculated Compliance Score</h3>
+            <Brain className="h-5 w-5 text-accent-purple animate-pulse" />
+            <h3 className="text-lg font-semibold text-white">AI-Calculated Compliance Score</h3>
           </div>
-          <div className="text-4xl font-bold text-primary-600 mb-2">{overallScore}%</div>
-          <p className="text-sm text-primary-700 mb-2">
+          <div className="text-4xl font-bold text-accent-purple mb-2 hover:scale-110 transition-transform duration-300">{overallScore}%</div>
+          <p className="text-sm text-gray-300 mb-2">
             {overallScore >= 90 ? 'AI Assessment: Excellent compliance standing' :
              overallScore >= 80 ? 'AI Assessment: Good compliance with minor issues' :
              overallScore >= 70 ? 'AI Assessment: Fair compliance - attention needed' :
              'AI Assessment: Poor compliance - immediate action required'}
           </p>
-          <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
+          <div className="status-cyber">
             <Zap className="h-3 w-3 mr-1" />
             Powered by Machine Learning
           </div>
@@ -412,40 +359,40 @@ traditionally require hours of manual analysis.
 
         {/* Quick Stats */}
         <div className="grid grid-cols-4 gap-4">
-          <div className="text-center p-4 bg-success-50 rounded-lg border border-success-100">
-            <p className="text-sm font-medium text-success-800">AI Verified Compliant</p>
-            <p className="text-2xl font-bold text-success-900">
+          <div className="text-center p-4 bg-dark-200 rounded-lg border border-accent-green/20 hover:border-accent-green/40 transition-all duration-300 hover:scale-105 group">
+            <p className="text-sm font-medium text-white group-hover:text-accent-green transition-colors">AI Verified Compliant</p>
+            <p className="text-2xl font-bold text-accent-green group-hover:scale-110 transition-transform duration-300">
               {complianceMetrics.filter(m => m.status === 'compliant').length}
             </p>
           </div>
-          <div className="text-center p-4 bg-warning-50 rounded-lg border border-warning-100">
-            <p className="text-sm font-medium text-warning-800">AI Flagged Warning</p>
-            <p className="text-2xl font-bold text-warning-900">
+          <div className="text-center p-4 bg-dark-200 rounded-lg border border-amber-500/20 hover:border-amber-500/40 transition-all duration-300 hover:scale-105 group">
+            <p className="text-sm font-medium text-white group-hover:text-amber-400 transition-colors">AI Flagged Warning</p>
+            <p className="text-2xl font-bold text-amber-400 group-hover:scale-110 transition-transform duration-300">
               {complianceMetrics.filter(m => m.status === 'warning').length}
             </p>
           </div>
-          <div className="text-center p-4 bg-danger-50 rounded-lg border border-danger-100">
-            <p className="text-sm font-medium text-danger-800">AI Detected Critical</p>
-            <p className="text-2xl font-bold text-danger-900">
+          <div className="text-center p-4 bg-dark-200 rounded-lg border border-red-500/20 hover:border-red-500/40 transition-all duration-300 hover:scale-105 group">
+            <p className="text-sm font-medium text-white group-hover:text-red-400 transition-colors">AI Detected Critical</p>
+            <p className="text-2xl font-bold text-red-400 group-hover:scale-110 transition-transform duration-300">
               {complianceMetrics.filter(m => m.status === 'non-compliant').length}
             </p>
           </div>
-          <div className="text-center p-4 bg-primary-50 rounded-lg border border-primary-100">
-            <p className="text-sm font-medium text-primary-800">AI Analyzed Requirements</p>
-            <p className="text-2xl font-bold text-primary-900">
+          <div className="text-center p-4 bg-dark-200 rounded-lg border border-accent-cyan/20 hover:border-accent-cyan/40 transition-all duration-300 hover:scale-105 group">
+            <p className="text-sm font-medium text-white group-hover:text-accent-cyan transition-colors">AI Analyzed Requirements</p>
+            <p className="text-2xl font-bold text-accent-cyan group-hover:scale-110 transition-transform duration-300">
               {complianceMetrics.reduce((sum, m) => sum + m.requirements, 0)}
             </p>
           </div>
         </div>
       </div>
 
-      {/* Charts */}
+              {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Compliance Score Distribution */}
-        <div className="card">
+        <div className="glass-card p-6 transition-all duration-300 group">
           <div className="flex items-center space-x-2 mb-4">
-            <Brain className="h-5 w-5 text-primary-600" />
-            <h3 className="text-lg font-semibold text-gray-900">AI Compliance Score Distribution</h3>
+            <Brain className="h-5 w-5 text-accent-purple animate-pulse" />
+            <h3 className="text-lg font-semibold text-white group-hover:text-accent-purple transition-colors">AI Compliance Score Distribution</h3>
           </div>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
@@ -462,34 +409,46 @@ traditionally require hours of manual analysis.
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip />
+                <Tooltip 
+                  contentStyle={{
+                    backgroundColor: '#111113',
+                    border: '1px solid #252528',
+                    borderRadius: '8px',
+                    color: '#fff'
+                  }}
+                />
               </PieChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         {/* Requirements Progress */}
-        <div className="card">
+        <div className="glass-card p-6 transition-all duration-300 group">
           <div className="flex items-center space-x-2 mb-4">
-            <Target className="h-5 w-5 text-primary-600" />
-            <h3 className="text-lg font-semibold text-gray-900">AI-Tracked Requirements Progress</h3>
+            <Target className="h-5 w-5 text-accent-cyan animate-spin" />
+            <h3 className="text-lg font-semibold text-white group-hover:text-accent-cyan transition-colors">AI-Tracked Requirements Progress</h3>
           </div>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={barData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#252528" />
                 <XAxis 
                   dataKey="category" 
-                  tick={{ fontSize: 12 }}
+                  tick={{ fontSize: 12, fill: '#9ca3af' }}
                   angle={-45}
                   textAnchor="end"
                   height={80}
                 />
-                <YAxis tick={{ fontSize: 12 }} />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="completed" fill="#22c55e" name="AI Verified Complete" />
-                <Bar dataKey="requirements" fill="#e5e7eb" name="Total Requirements" />
+                <YAxis tick={{ fontSize: 12, fill: '#9ca3af' }} />
+                <Tooltip 
+                  contentStyle={{
+                    backgroundColor: '#111113',
+                    border: '1px solid #252528',
+                    borderRadius: '8px',
+                    color: '#fff'
+                  }}
+                />
+                <Bar dataKey="score" radius={[4, 4, 0, 0]} fill="#06b6d4" />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -497,56 +456,57 @@ traditionally require hours of manual analysis.
       </div>
 
       {/* Detailed Compliance Metrics */}
-      <div className="card">
-        <div className="flex items-center space-x-2 mb-6">
-          <Search className="h-5 w-5 text-primary-600" />
-          <h3 className="text-lg font-semibold text-gray-900">AI-Powered Compliance Analysis</h3>
+      <div className="glass-card p-6 transition-all duration-300">
+        <div className="flex items-center space-x-2 mb-4">
+          <Shield className="h-5 w-5 text-accent-green animate-pulse" />
+          <h3 className="text-lg font-semibold text-white">AI-Powered Compliance Analysis</h3>
         </div>
         <div className="space-y-4">
           {complianceMetrics.map((metric, index) => (
-            <div key={index} className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center space-x-3">
+            <div key={index} className="p-4 border border-dark-300 rounded-lg hover:bg-dark-200 transition-all duration-300 hover:border-accent-purple/40 hover:scale-[1.02] group glass-card">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center space-x-3">
+                  <div className="flex items-center space-x-2">
                     {getStatusIcon(metric.status)}
-                    <div>
-                      <h4 className="font-medium text-gray-900">{metric.category}</h4>
-                      <p className="text-sm text-gray-600">
-                        AI Analysis: {metric.completed} of {metric.requirements} requirements verified
-                      </p>
-                    </div>
-                    <span className={`status-badge ${getStatusColor(metric.status)}`}>
-                      {metric.status}
-                    </span>
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                      <Brain className="h-3 w-3 mr-1" />
-                      AI Analyzed
-                    </span>
+                    <h4 className="font-medium text-white group-hover:text-accent-purple transition-colors">{metric.category}</h4>
                   </div>
-                  
-                  <div className="mt-3">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm text-gray-600">AI Confidence Level</span>
-                      <span className="text-sm font-medium text-gray-900">{metric.score}%</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(metric.status)}`}>
+                    {metric.status}
+                  </span>
+                </div>
+                <div className="text-right">
+                  <div className="flex items-center space-x-2">
+                    <Brain className="h-4 w-4 text-accent-purple" />
+                    <span className="text-sm font-medium text-white">AI Confidence Level</span>
+                    <span className="text-sm font-medium text-accent-purple group-hover:scale-110 transition-transform duration-300">{metric.aiConfidence}%</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <span className="text-sm text-gray-400">Score</span>
+                  <div className="flex items-center mt-1">
+                    <div className="flex-1 bg-dark-300 rounded-full h-2 mr-2">
                       <div 
-                        className={`h-2 rounded-full ${
-                          metric.status === 'compliant' ? 'bg-success-600' :
-                          metric.status === 'warning' ? 'bg-warning-600' : 'bg-danger-600'
-                        }`}
-                        style={{ width: `${metric.score}%` }}
+                        className="h-2 rounded-full transition-all duration-500 hover:scale-y-150"
+                        style={{ 
+                          width: `${metric.score}%`,
+                          backgroundColor: metric.status === 'compliant' ? '#10b981' : 
+                                         metric.status === 'warning' ? '#f59e0b' : '#ef4444'
+                        }}
                       ></div>
                     </div>
+                    <span className="text-sm font-medium text-white">{metric.score}%</span>
                   </div>
-
-                  <div className="mt-3 flex items-center space-x-4 text-sm">
-                    <div className="flex items-center space-x-1">
-                      <Calendar className="h-4 w-4 text-gray-400" />
-                      <span className="text-gray-600">Next AI Review:</span>
-                      <span className="text-gray-900">{formatDate(metric.nextReview)}</span>
-                    </div>
-                  </div>
+                </div>
+                <div>
+                  <span className="text-gray-400">Requirements</span>
+                  <p className="text-white">{metric.requirements}</p>
+                </div>
+                <div>
+                  <span className="text-gray-400">Next AI Review:</span>
+                  <span className="text-white">{formatDate(metric.nextReview)}</span>
                 </div>
               </div>
             </div>
@@ -554,27 +514,33 @@ traditionally require hours of manual analysis.
         </div>
       </div>
 
-      {/* Compliance Calendar */}
-      <div className="card">
-        <div className="flex items-center space-x-2 mb-6">
-          <Calendar className="h-5 w-5 text-primary-600" />
-          <h3 className="text-lg font-semibold text-gray-900">AI-Scheduled Compliance Reviews</h3>
+      {/* Upcoming AI Reviews */}
+      <div className="glass-card p-6 transition-all duration-300">
+        <div className="flex items-center space-x-2 mb-4">
+          <Activity className="h-5 w-5 text-accent-cyan animate-bounce" />
+          <h3 className="text-lg font-semibold text-white">AI-Scheduled Compliance Reviews</h3>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="space-y-3">
           {complianceMetrics
             .sort((a, b) => new Date(a.nextReview).getTime() - new Date(b.nextReview).getTime())
+            .slice(0, 3)
             .map((metric, index) => (
-              <div key={index} className="p-4 border border-gray-200 rounded-lg">
-                <div className="flex items-center space-x-2 mb-2">
-                  <Brain className="h-4 w-4 text-primary-600" />
-                  <span className="font-medium text-gray-900">{metric.category}</span>
+              <div key={index} className="flex items-center justify-between p-3 bg-dark-200 rounded-lg hover:bg-dark-300 transition-all duration-200 hover:scale-[1.02] group">
+                <div className="flex items-center space-x-3">
+                  <Brain className="h-4 w-4 text-accent-purple animate-pulse" />
+                  <span className="font-medium text-white group-hover:text-accent-purple transition-colors">{metric.category}</span>
                 </div>
-                <p className="text-sm text-gray-600 mb-2">
-                  AI Review Date: {formatDate(metric.nextReview)}
-                </p>
-                <p className="text-xs text-gray-500">
-                  {Math.ceil((new Date(metric.nextReview).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} days until automated AI analysis
-                </p>
+                <div>
+                  <p className="text-sm text-gray-400 mb-2">
+                    Next AI compliance scan scheduled for {formatDate(metric.nextReview)}
+                  </p>
+                  <div className="flex items-center space-x-2">
+                    <Zap className="h-3 w-3 text-accent-cyan" />
+                    <span className="text-xs text-gray-400">
+                      Automated neural network analysis • ML-powered risk assessment
+                    </span>
+                  </div>
+                </div>
               </div>
             ))}
         </div>

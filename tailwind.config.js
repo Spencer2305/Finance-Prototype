@@ -8,6 +8,38 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        // Professional dark theme colors
+        dark: {
+          50: '#0a0a0b',
+          100: '#111113',
+          200: '#1a1a1d',
+          300: '#252528',
+          400: '#2d2d30',
+          500: '#404040',
+          600: '#6b7280',
+          700: '#9ca3af',
+          800: '#d1d5db',
+          900: '#f3f4f6',
+        },
+        accent: {
+          purple: '#8b5cf6',
+          cyan: '#06b6d4',
+          green: '#10b981',
+          amber: '#f59e0b',
+          red: '#ef4444',
+        },
+        cyber: {
+          50: '#f8fafc',
+          100: '#f1f5f9', 
+          200: '#e2e8f0',
+          300: '#cbd5e1',
+          400: '#94a3b8',
+          500: '#64748b',
+          600: '#475569',
+          700: '#334155',
+          800: '#1e293b',
+          900: '#0f172a',
+        },
         primary: {
           50: '#f0f9ff',
           100: '#e0f2fe',
@@ -58,9 +90,39 @@ module.exports = {
         }
       },
       boxShadow: {
-        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
-        'medium': '0 4px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-      }
+        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.1), 0 10px 20px -2px rgba(0, 0, 0, 0.08)',
+        'medium': '0 4px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.08)',
+        'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.3)',
+        'purple': '0 8px 25px rgba(139, 92, 246, 0.15)',
+        'cyan': '0 8px 25px rgba(6, 182, 212, 0.15)',
+        'green': '0 8px 25px rgba(16, 185, 129, 0.15)',
+        'floating': '0 20px 60px -15px rgba(0, 0, 0, 0.4)',
+      },
+      backgroundImage: {
+        'gradient-dark': 'linear-gradient(135deg, #0a0a0b 0%, #111113 100%)',
+        'gradient-subtle': 'linear-gradient(135deg, #111113 0%, #1a1a1d 100%)',
+        'gradient-purple': 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
+        'gradient-cyan': 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)',
+        'gradient-green': 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+      },
+      backdropBlur: {
+        xs: '2px',
+      },
+      animation: {
+        'float': 'float 6s ease-in-out infinite',
+        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'fade-in': 'fadeIn 0.5s ease-in-out',
+      },
+      keyframes: {
+        float: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-5px)' },
+        },
+        fadeIn: {
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0px)' },
+        },
+      },
     },
   },
   plugins: [],

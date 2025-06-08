@@ -1,7 +1,113 @@
 'use client';
 
 import { useState } from 'react';
-import { FileText, Upload, AlertTriangle, CheckCircle, Clock, Brain, Zap, Search, Target, Activity } from 'lucide-react';
+import { FileText, Search, Target, Upload, Brain, Zap, Activity, AlertCircle, CheckCircle, Clock, X } from 'lucide-react';
+
+interface Invoice {
+  id: string;
+  vendor: string;
+  amount: number;
+  status: 'pending' | 'processed' | 'approved' | 'paid';
+  dueDate: string;
+  glCode: string;
+  confidence: number;
+  aiTags: string[];
+}
+
+interface Anomaly {
+  id: string;
+  type: string;
+  description: string;
+  severity: 'low' | 'medium' | 'high';
+  confidence: number;
+  recommendation: string;
+  action: string;
+}
+
+interface ERPIntegration {
+  system: string;
+  status: 'connected' | 'syncing' | 'error';
+  accuracy: number;
+  invoicesProcessed: number;
+  lastSync: string;
+  aiFeatures: string;
+  automation: string;
+}
+
+const invoices: Invoice[] = [
+  {
+    id: 'INV-2024-001',
+    vendor: 'CloudTech Solutions',
+    amount: 4500,
+    status: 'processed',
+    dueDate: '2024-04-15',
+    glCode: '4000',
+    confidence: 97,
+    aiTags: ['Software License', 'Recurring']
+  },
+  {
+    id: 'INV-2024-002',
+    vendor: 'Office Supplies Ltd',
+    amount: 850,
+    status: 'pending',
+    dueDate: '2024-04-20',
+    glCode: '5200',
+    confidence: 93,
+    aiTags: ['Office Expense', 'One-time']
+  },
+  {
+    id: 'INV-2024-003',
+    vendor: 'Marketing Agency Pro',
+    amount: 12000,
+    status: 'approved',
+    dueDate: '2024-04-25',
+    glCode: '6100',
+    confidence: 99,
+    aiTags: ['Marketing', 'Campaign']
+  }
+];
+
+const detectedAnomalies: Anomaly[] = [
+  {
+    id: 'AN-001',
+    type: 'Duplicate Invoice',
+    description: 'Neural network detected potential duplicate payment to CloudTech Solutions',
+    severity: 'high',
+    confidence: 94,
+    recommendation: 'Review transaction history and verify with vendor',
+    action: 'Hold payment pending verification'
+  },
+  {
+    id: 'AN-002',
+    type: 'Price Variance',
+    description: 'AI detected 25% price increase from historical average for office supplies',
+    severity: 'medium',
+    confidence: 87,
+    recommendation: 'Verify market pricing or renegotiate contract terms',
+    action: 'Flag for procurement review'
+  }
+];
+
+const erpIntegrations: ERPIntegration[] = [
+  {
+    system: 'SAP Business One',
+    status: 'connected',
+    accuracy: 98.7,
+    invoicesProcessed: 2847,
+    lastSync: '2 minutes ago',
+    aiFeatures: 'Smart GL coding, automated matching, predictive analytics',
+    automation: 'Full automation enabled'
+  },
+  {
+    system: 'QuickBooks Enterprise',
+    status: 'syncing',
+    accuracy: 96.2,
+    invoicesProcessed: 1923,
+    lastSync: 'In progress',
+    aiFeatures: 'Intelligent categorization, duplicate detection',
+    automation: 'Partial automation'
+  }
+];
 
 export default function InvoiceManagement() {
   const [activeTab, setActiveTab] = useState('automated');
@@ -9,257 +115,134 @@ export default function InvoiceManagement() {
   const tabs = [
     { 
       id: 'automated', 
-      label: 'AI Automated Processing', 
-      icon: Brain,
-      description: 'Neural network invoice analysis'
+      label: 'AI Processing',
+      description: 'Neural network automation',
+      icon: Brain
     },
     { 
       id: 'anomalies', 
-      label: 'ML Anomaly Detection', 
-      icon: Search,
-      description: 'Machine learning fraud detection'
+      label: 'ML Detection',
+      description: 'Anomaly analysis',
+      icon: Search
     },
     { 
       id: 'integration', 
-      label: 'AI ERP Integration', 
-      icon: Target,
-      description: 'Intelligent system connectivity'
-    },
-  ];
-
-  const automatedInvoices = [
-    {
-      id: 'INV-001',
-      vendor: 'TechCorp Solutions Ltd',
-      amount: 2450.00,
-      status: 'processed',
-      aiConfidence: 98,
-      extractedItems: 4,
-      glCodes: ['4100', '4200', '4300'],
-      processingTime: '0.8s',
-      anomalies: 0
-    },
-    {
-      id: 'INV-002',
-      vendor: 'Office Supplies Direct',
-      amount: 156.73,
-      status: 'processing',
-      aiConfidence: 94,
-      extractedItems: 2,
-      glCodes: ['6100', '6200'],
-      processingTime: '1.2s',
-      anomalies: 0
-    },
-    {
-      id: 'INV-003',
-      vendor: 'Marketing Agency Pro',
-      amount: 8750.00,
-      status: 'review',
-      aiConfidence: 87,
-      extractedItems: 6,
-      glCodes: ['5200', '5300'],
-      processingTime: '2.1s',
-      anomalies: 1
-    }
-  ];
-
-  const detectedAnomalies = [
-    {
-      id: 'ANOM-001',
-      type: 'Duplicate Invoice',
-      severity: 'High',
-      description: 'AI detected potential duplicate of INV-003 from Marketing Agency Pro',
-      confidence: 94,
-      recommendation: 'Hold for manual review - similar invoice processed 3 days ago',
-      action: 'ML flagged for investigation'
-    },
-    {
-      id: 'ANOM-002',
-      type: 'Budget Alert',
-      severity: 'Medium',
-      description: 'Neural network identified spend exceeding budget threshold in Marketing category',
-      confidence: 89,
-      recommendation: 'Current month spend: £12,400 vs budget: £10,000',
-      action: 'AI suggests approval workflow'
-    },
-    {
-      id: 'ANOM-003',
-      type: 'Unusual Pattern',
-      severity: 'Low',
-      description: 'Machine learning detected 40% increase in office supplies compared to historical average',
-      confidence: 76,
-      recommendation: 'Pattern recognition suggests seasonal variation - monitoring continues',
-      action: 'AI monitoring active'
-    }
-  ];
-
-  const erpIntegrations = [
-    {
-      system: 'Xero',
-      status: 'active',
-      aiFeatures: 'Full neural network integration',
-      lastSync: '2 minutes ago',
-      invoicesProcessed: 1247,
-      accuracy: 98.7,
-      automation: 'Real-time AI processing'
-    },
-    {
-      system: 'QuickBooks',
-      status: 'ready',
-      aiFeatures: 'ML-powered reconciliation ready',
-      lastSync: 'Not connected',
-      invoicesProcessed: 0,
-      accuracy: 0,
-      automation: 'AI setup pending'
-    },
-    {
-      system: 'SAP',
-      status: 'development',
-      aiFeatures: 'Advanced neural networks in development',
-      lastSync: 'In development',
-      invoicesProcessed: 0,
-      accuracy: 0,
-      automation: 'AI beta testing'
+      label: 'ERP Sync',
+      description: 'Intelligent connectivity',
+      icon: Target
     }
   ];
 
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'processed':
-        return <CheckCircle className="h-4 w-4 text-success-600" />;
-      case 'processing':
-        return <Clock className="h-4 w-4 text-warning-600" />;
-      case 'review':
-        return <AlertTriangle className="h-4 w-4 text-danger-600" />;
+        return <CheckCircle className="h-4 w-4 text-accent-green" />;
+      case 'approved':
+        return <Clock className="h-4 w-4 text-accent-cyan" />;
+      case 'paid':
+        return <CheckCircle className="h-4 w-4 text-accent-green" />;
       default:
-        return <FileText className="h-4 w-4 text-gray-600" />;
+        return <Clock className="h-4 w-4 text-amber-400" />;
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'processed':
+        return 'bg-accent-green/10 text-accent-green border-accent-green/20';
+      case 'approved':
+        return 'bg-accent-cyan/10 text-accent-cyan border-accent-cyan/20';
+      case 'paid':
+        return 'bg-accent-green/10 text-accent-green border-accent-green/20';
+      default:
+        return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
     }
   };
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case 'High':
-        return 'text-danger-600 bg-danger-50 border-danger-200';
-      case 'Medium':
-        return 'text-warning-600 bg-warning-50 border-warning-200';
-      case 'Low':
-        return 'text-info-600 bg-info-50 border-info-200';
+      case 'high':
+        return 'bg-red-500/10 border-red-500/20';
+      case 'medium':
+        return 'bg-amber-500/10 border-amber-500/20';
       default:
-        return 'text-gray-600 bg-gray-50 border-gray-200';
+        return 'bg-accent-green/10 border-accent-green/20';
     }
   };
 
   const getERPStatusColor = (status: string) => {
     switch (status) {
-      case 'active':
-        return 'text-success-600 bg-success-50 border-success-200';
-      case 'ready':
-        return 'text-info-600 bg-info-50 border-info-200';
-      case 'development':
-        return 'text-warning-600 bg-warning-50 border-warning-200';
+      case 'connected':
+        return 'bg-accent-green/10 border-accent-green/20';
+      case 'syncing':
+        return 'bg-accent-cyan/10 border-accent-cyan/20';
       default:
-        return 'text-gray-600 bg-gray-50 border-gray-200';
+        return 'bg-red-500/10 border-red-500/20';
     }
   };
 
   const renderAutomatedTab = () => (
     <div className="space-y-6">
-      {/* AI Processing Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="p-4 bg-gradient-to-r from-primary-50 to-blue-50 rounded-lg border border-primary-100">
-          <div className="flex items-center space-x-2 mb-2">
-            <Brain className="h-4 w-4 text-primary-600" />
-            <h5 className="font-medium text-primary-900">AI Processing Rate</h5>
-          </div>
-          <p className="text-2xl font-bold text-primary-800">0.8s</p>
-          <p className="text-xs text-primary-600">Average neural analysis time</p>
-        </div>
-        
-        <div className="p-4 bg-gradient-to-r from-success-50 to-green-50 rounded-lg border border-success-100">
-          <div className="flex items-center space-x-2 mb-2">
-            <Target className="h-4 w-4 text-success-600" />
-            <h5 className="font-medium text-success-900">ML Accuracy</h5>
-          </div>
-          <p className="text-2xl font-bold text-success-800">98.7%</p>
-          <p className="text-xs text-success-600">Machine learning precision</p>
-        </div>
-        
-        <div className="p-4 bg-gradient-to-r from-purple-50 to-violet-50 rounded-lg border border-purple-100">
-          <div className="flex items-center space-x-2 mb-2">
-            <Zap className="h-4 w-4 text-purple-600" />
-            <h5 className="font-medium text-purple-900">AI Extracted Items</h5>
-          </div>
-          <p className="text-2xl font-bold text-purple-800">12</p>
-          <p className="text-xs text-purple-600">Line items auto-processed</p>
-        </div>
-        
-        <div className="p-4 bg-gradient-to-r from-orange-50 to-red-50 rounded-lg border border-orange-100">
-          <div className="flex items-center space-x-2 mb-2">
-            <Search className="h-4 w-4 text-orange-600" />
-            <h5 className="font-medium text-orange-900">AI Anomalies Found</h5>
-          </div>
-          <p className="text-2xl font-bold text-orange-800">1</p>
-          <p className="text-xs text-orange-600">ML flagged for review</p>
-        </div>
+      <div className="flex items-center space-x-2 mb-4">
+        <Brain className="h-5 w-5 text-accent-purple" />
+        <h4 className="text-md font-medium text-white">AI-Processed Invoices</h4>
+        <span className="status-cyber">
+          Neural Network Active
+        </span>
       </div>
-
-      {/* AI Invoice Processing */}
-      <div>
-        <div className="flex items-center space-x-2 mb-4">
-          <Brain className="h-5 w-5 text-purple-600" />
-          <h4 className="text-md font-medium text-gray-800">AI-Processed Invoices</h4>
-          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-            Neural Network Active
-          </span>
-        </div>
-        
-        <div className="space-y-3">
-          {automatedInvoices.map((invoice) => (
-            <div key={invoice.id} className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors hover:border-purple-300">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center space-x-3">
-                  <div className="flex items-center space-x-2">
-                    <Brain className="h-4 w-4 text-purple-600" />
-                    <span className="font-medium text-gray-900">{invoice.id}</span>
-                  </div>
+      
+      <div className="space-y-4">
+        {invoices.map((invoice) => (
+          <div key={invoice.id} className="p-4 border border-dark-300 rounded-lg hover:bg-dark-200 transition-colors hover:border-accent-purple/40 glass-card">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-2">
                   {getStatusIcon(invoice.status)}
-                  <span className="text-sm text-gray-600">{invoice.vendor}</span>
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                    <Zap className="h-3 w-3 mr-1" />
-                    AI Processed
-                  </span>
+                  <span className="font-medium text-white">{invoice.id}</span>
                 </div>
-                <div className="text-right">
-                  <p className="font-medium text-gray-900">£{invoice.amount.toLocaleString()}</p>
-                  <p className="text-sm text-purple-600">AI Confidence: {invoice.aiConfidence}%</p>
+                <div>
+                  <span className="text-sm text-gray-400">{invoice.vendor}</span>
                 </div>
               </div>
-              
-              <div className="p-3 bg-gradient-to-r from-gray-50 to-purple-50 rounded border border-purple-100">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                  <div>
-                    <span className="text-purple-800 font-medium">Neural Processing:</span>
-                    <p className="text-purple-700">{invoice.processingTime}</p>
-                  </div>
-                  <div>
-                    <span className="text-purple-800 font-medium">ML Extracted Items:</span>
-                    <p className="text-purple-700">{invoice.extractedItems} line items</p>
-                  </div>
-                  <div>
-                    <span className="text-purple-800 font-medium">AI GL Codes:</span>
-                    <p className="text-purple-700">{invoice.glCodes.join(', ')}</p>
-                  </div>
-                  <div>
-                    <span className="text-purple-800 font-medium">AI Anomalies:</span>
-                    <p className={invoice.anomalies > 0 ? 'text-orange-700' : 'text-green-700'}>
-                      {invoice.anomalies === 0 ? 'Clean' : `${invoice.anomalies} flagged`}
-                    </p>
-                  </div>
+              <div className="flex items-center space-x-3">
+                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(invoice.status)}`}>
+                  {invoice.status}
+                </span>
+                <div className="text-right">
+                  <p className="font-medium text-white">£{invoice.amount.toLocaleString()}</p>
+                  <p className="text-xs text-gray-400">Due: {new Date(invoice.dueDate).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' })}</p>
                 </div>
               </div>
             </div>
-          ))}
-        </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+              <div>
+                <span className="text-gray-400">GL Code:</span>
+                <span className="text-white ml-2">{invoice.glCode}</span>
+              </div>
+              <div>
+                <span className="text-gray-400">AI Confidence:</span>
+                <span className="text-accent-green ml-2">{invoice.confidence}%</span>
+              </div>
+              <div className="flex flex-wrap gap-1">
+                {invoice.aiTags.map((tag, idx) => (
+                  <span key={idx} className="status-cyber">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+            
+            <div className="mt-3 p-2 bg-dark-200 rounded border border-accent-purple/20">
+              <div className="flex items-center space-x-2">
+                <Brain className="h-3 w-3 text-accent-purple" />
+                <span className="text-xs text-gray-300">
+                  Neural network processed • GL auto-coded • Duplicate check passed
+                </span>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -267,48 +250,48 @@ export default function InvoiceManagement() {
   const renderAnomaliesTab = () => (
     <div className="space-y-6">
       <div className="flex items-center space-x-2 mb-4">
-        <Search className="h-5 w-5 text-orange-600" />
-        <h4 className="text-md font-medium text-gray-800">AI Anomaly Detection</h4>
-        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+        <Search className="h-5 w-5 text-amber-400" />
+        <h4 className="text-md font-medium text-white">AI Anomaly Detection</h4>
+        <span className="bg-amber-500/10 text-amber-400 border-amber-500/20 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border">
           Machine Learning Active
         </span>
       </div>
       
       <div className="space-y-4">
         {detectedAnomalies.map((anomaly) => (
-          <div key={anomaly.id} className={`p-4 rounded-lg border ${getSeverityColor(anomaly.severity)}`}>
+          <div key={anomaly.id} className={`p-4 rounded-lg border glass-card ${getSeverityColor(anomaly.severity)}`}>
             <div className="flex items-start justify-between mb-3">
               <div className="flex items-center space-x-3">
                 <div className="flex items-center space-x-2">
-                  <Brain className="h-4 w-4 text-purple-600" />
-                  <span className="font-medium">{anomaly.type}</span>
+                  <Brain className="h-4 w-4 text-accent-purple" />
+                  <span className="font-medium text-white">{anomaly.type}</span>
                 </div>
-                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                <span className="status-cyber">
                   <Search className="h-3 w-3 mr-1" />
                   AI Detected
                 </span>
               </div>
               <div className="text-right">
-                <span className="text-sm font-medium">AI Confidence: {anomaly.confidence}%</span>
-                <p className="text-xs text-gray-500">{anomaly.severity} Priority</p>
+                <span className="text-sm font-medium text-white">AI Confidence: {anomaly.confidence}%</span>
+                <p className="text-xs text-gray-400">{anomaly.severity} Priority</p>
               </div>
             </div>
             
             <div className="space-y-3">
               <div>
-                <span className="text-sm font-medium text-gray-800">Neural Network Analysis:</span>
-                <p className="text-sm text-gray-700 mt-1">{anomaly.description}</p>
+                <span className="text-sm font-medium text-accent-purple">Neural Network Analysis:</span>
+                <p className="text-sm text-gray-300 mt-1">{anomaly.description}</p>
               </div>
               
               <div>
-                <span className="text-sm font-medium text-gray-800">AI Recommendation:</span>
-                <p className="text-sm text-gray-700 mt-1">{anomaly.recommendation}</p>
+                <span className="text-sm font-medium text-accent-purple">AI Recommendation:</span>
+                <p className="text-sm text-gray-300 mt-1">{anomaly.recommendation}</p>
               </div>
               
-              <div className="p-2 bg-gradient-to-r from-purple-50 to-blue-50 rounded border border-purple-200">
+              <div className="p-2 bg-dark-200 rounded border border-accent-purple/20">
                 <div className="flex items-center space-x-2">
-                  <Zap className="h-3 w-3 text-purple-600" />
-                  <span className="text-xs text-purple-700 font-medium">
+                  <Zap className="h-3 w-3 text-accent-purple" />
+                  <span className="text-xs text-gray-300 font-medium">
                     Machine Learning Action: {anomaly.action}
                   </span>
                 </div>
@@ -323,54 +306,54 @@ export default function InvoiceManagement() {
   const renderIntegrationTab = () => (
     <div className="space-y-6">
       <div className="flex items-center space-x-2 mb-4">
-        <Target className="h-5 w-5 text-blue-600" />
-        <h4 className="text-md font-medium text-gray-800">AI ERP Integration Status</h4>
-        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+        <Target className="h-5 w-5 text-accent-cyan" />
+        <h4 className="text-md font-medium text-white">AI ERP Integration Status</h4>
+        <span className="bg-accent-cyan/10 text-accent-cyan border-accent-cyan/20 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border">
           Intelligent Connectivity
         </span>
       </div>
       
       <div className="space-y-4">
         {erpIntegrations.map((integration) => (
-          <div key={integration.system} className={`p-4 rounded-lg border ${getERPStatusColor(integration.status)}`}>
+          <div key={integration.system} className={`p-4 rounded-lg border glass-card ${getERPStatusColor(integration.status)}`}>
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center space-x-3">
                 <div className="flex items-center space-x-2">
-                  <Brain className="h-5 w-5 text-purple-600" />
-                  <h5 className="font-medium text-gray-900">{integration.system}</h5>
+                  <Brain className="h-5 w-5 text-accent-purple" />
+                  <h5 className="font-medium text-white">{integration.system}</h5>
                 </div>
-                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                <span className="status-cyber">
                   <Activity className="h-3 w-3 mr-1" />
                   AI Enhanced
                 </span>
               </div>
-              <span className="text-sm font-medium capitalize">{integration.status}</span>
+              <span className="text-sm font-medium capitalize text-white">{integration.status}</span>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
               <div>
-                <span className="text-sm font-medium text-gray-800">AI Features:</span>
-                <p className="text-sm text-gray-700">{integration.aiFeatures}</p>
+                <span className="text-sm font-medium text-accent-purple">AI Features:</span>
+                <p className="text-sm text-gray-300">{integration.aiFeatures}</p>
               </div>
               <div>
-                <span className="text-sm font-medium text-gray-800">Neural Sync Status:</span>
-                <p className="text-sm text-gray-700">{integration.lastSync}</p>
+                <span className="text-sm font-medium text-accent-purple">Neural Sync Status:</span>
+                <p className="text-sm text-gray-300">{integration.lastSync}</p>
               </div>
             </div>
             
-            <div className="p-3 bg-gradient-to-r from-gray-50 to-purple-50 rounded border border-purple-100">
+            <div className="p-3 bg-dark-200 rounded border border-accent-purple/20">
               <div className="grid grid-cols-3 gap-4 text-sm">
                 <div>
-                  <span className="text-purple-800 font-medium">AI Processed:</span>
-                  <p className="text-purple-700">{integration.invoicesProcessed.toLocaleString()} invoices</p>
+                  <span className="text-accent-purple font-medium">AI Processed:</span>
+                  <p className="text-gray-300">{integration.invoicesProcessed.toLocaleString()} invoices</p>
                 </div>
                 <div>
-                  <span className="text-purple-800 font-medium">ML Accuracy:</span>
-                  <p className="text-purple-700">{integration.accuracy}%</p>
+                  <span className="text-accent-purple font-medium">ML Accuracy:</span>
+                  <p className="text-gray-300">{integration.accuracy}%</p>
                 </div>
                 <div>
-                  <span className="text-purple-800 font-medium">Neural Automation:</span>
-                  <p className="text-purple-700">{integration.automation}</p>
+                  <span className="text-accent-purple font-medium">Neural Automation:</span>
+                  <p className="text-gray-300">{integration.automation}</p>
                 </div>
               </div>
             </div>
@@ -381,26 +364,26 @@ export default function InvoiceManagement() {
   );
 
   return (
-    <div className="card border-l-4 border-l-indigo-500">
+    <div className="glass-card p-6 border-l-4 border-l-accent-cyan">
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-3">
-            <div className="p-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg">
-              <Brain className="h-6 w-6 text-white" />
+            <div className="icon-container-cyber">
+              <Brain className="h-6 w-6 text-accent-cyan" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-1">AI Invoice Management System</h3>
-              <p className="text-sm text-gray-600">
+              <h3 className="text-lg font-semibold text-white mb-1">📄 AI Invoice Management System</h3>
+              <p className="text-sm text-gray-400">
                 Neural network-powered invoice processing with machine learning anomaly detection and intelligent ERP integration
               </p>
             </div>
           </div>
           <div className="flex items-center space-x-2">
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+            <span className="status-success">
               <Activity className="h-3 w-3 mr-1" />
               AI Systems Online
             </span>
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+            <span className="status-cyber">
               <Zap className="h-3 w-3 mr-1" />
               98.7% Accuracy
             </span>
@@ -408,19 +391,19 @@ export default function InvoiceManagement() {
         </div>
 
         {/* AI Processing Overview */}
-        <div className="p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg border border-indigo-200 mb-6">
+        <div className="p-4 bg-dark-200 rounded-lg border border-accent-cyan/20 mb-6">
           <div className="flex items-start space-x-3">
-            <Brain className="h-5 w-5 text-indigo-600 mt-1" />
+            <Brain className="h-5 w-5 text-accent-cyan mt-1" />
             <div>
-              <h4 className="font-medium text-indigo-900 mb-2">🤖 AI Processing Intelligence</h4>
+              <h4 className="font-medium text-white mb-2">🤖 AI Processing Intelligence</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="text-indigo-800 font-medium">Neural Network Processing:</span>
-                  <p className="text-indigo-700">Advanced OCR and NLP algorithms extract data with 98.7% accuracy</p>
+                  <span className="text-accent-cyan font-medium">Neural Network Processing:</span>
+                  <p className="text-gray-300">Advanced OCR and NLP algorithms extract data with 98.7% accuracy</p>
                 </div>
                 <div>
-                  <span className="text-indigo-800 font-medium">Machine Learning Detection:</span>
-                  <p className="text-indigo-700">Real-time anomaly detection prevents fraud and duplicate payments</p>
+                  <span className="text-accent-cyan font-medium">Machine Learning Detection:</span>
+                  <p className="text-gray-300">Real-time anomaly detection prevents fraud and duplicate payments</p>
                 </div>
               </div>
             </div>
@@ -429,7 +412,7 @@ export default function InvoiceManagement() {
       </div>
 
       {/* AI-Enhanced Tab Navigation */}
-      <div className="border-b border-gray-200 mb-6">
+      <div className="border-b border-dark-300 mb-6">
         <nav className="-mb-px flex space-x-8">
           {tabs.map((tab) => {
             const IconComponent = tab.icon;
@@ -439,14 +422,14 @@ export default function InvoiceManagement() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`group inline-flex items-center py-2 px-1 border-b-2 font-medium text-sm ${
                   activeTab === tab.id
-                    ? 'border-primary-500 text-primary-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    ? 'border-accent-purple text-accent-purple'
+                    : 'border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-500'
                 }`}
               >
                 <IconComponent className="h-4 w-4 mr-2" />
                 <div className="text-left">
                   <div>{tab.label}</div>
-                  <div className="text-xs text-gray-400">{tab.description}</div>
+                  <div className="text-xs text-gray-500">{tab.description}</div>
                 </div>
               </button>
             );
